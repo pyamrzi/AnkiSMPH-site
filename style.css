@@ -1,4 +1,41 @@
 /* style.css */
+.title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0 0;
+    font-weight: bold;
+    margin-bottom: 0;
+    position: relative;
+    z-index: -1;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 0.2rem;
+    color: #555;
+    font-style: italic;
+    position: relative;
+    z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
 body {
 font-family: Calibri, Arial, sans-serif;
 margin: 0;
@@ -7,31 +44,179 @@ background-color: #ffffff;
 color: #222;
 }
 
+/* Modern Header Styles */
+.site-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .logo {
-font-weight: bold;
-font-size: 1.2rem;
-color: #003366;
+    font-weight: bold;
+    font-size: 1.5rem;
 }
 
-
-nav ul {
-list-style: none;
-margin: 0;
-padding: 0;
-display: flex;
-gap: 1rem;
+.logo a {
+    color: #003366;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-
-nav a {
-text-decoration: none;
-color: #003366;
-font-weight: 500;
+.logo a:hover {
+    color: #ff4444;
 }
 
+.primary-navigation {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 
-nav a.active {
-border-bottom: 2px solid #003366;
+.primary-navigation a {
+    color: #003366;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.primary-navigation a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #ff4444;
+    bottom: 0;
+    left: 0;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.primary-navigation a:hover::after,
+.primary-navigation a.active::after {
+    transform: scaleX(1);
+}
+
+.mobile-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: #003366;
+    transition: 0.3s ease;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    /* Navigation adjustments */
+    .mobile-nav-toggle {
+        display: block;
+    }
+
+    .primary-navigation {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .primary-navigation.show {
+        display: flex;
+    }
+
+    /* Hamburger animation */
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* Mobile font size adjustments */
+    .title {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .primary-navigation a {
+        font-size: 0.95rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    body {
+        font-size: 0.95rem;
+    }
 }
 
 
@@ -71,6 +256,11 @@ border-top: 1px solid #ddd;
 color: #555;
 font-size: 0.9rem;
 background-color: #f8f9fa;
+position: fixed;
+bottom: 0;
+width: 100%;
+left: 0;
+z-index: 5;
 }
 
 

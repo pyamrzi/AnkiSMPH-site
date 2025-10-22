@@ -4,30 +4,36 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AnkiSMPH | Install the UWSMPH Ruby Deck</title>
+<title>AnkiSMPH</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="stylesheet" href="style.css" />
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="js/markdown-loader.js"></script>
+<script src="js/components.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+        }
+    }
+</script>
+<script type="module" src="js/ruby.js"></script>
 </head>
 <body>
-<header>
-<nav>
-<div class="logo">AnkiSMPH</div>
-<ul>
-<li><a href="index.html" class="active">Install Deck</a></li>
-<li><a href="tags.html">Learning Objective Tags</a></li>
-<li><a href="resources.html" class="active">Anki Resources</a></li>
-</ul>
-</nav>
-</header>
-
+<div id="header-component"></div>
 
 <main>
 <section class="hero">
-<h1>Install the UWSMPH Ruby Deck</h1>
-<p>The official Anki deck for UWSMPH medical students. Follow the steps below to install via AnkiCollab and join our community.</p>
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; position: relative;">
+        <div style="height: 50px;"></div>
+        <div id="ruby-container" style="width: 300px; height: 100px; margin-top: 100px; position: relative; z-index: 1;"></div>
+        <div style="margin-top: -10px; position: relative; z-index: 2;">
+            <div class="title" style="color: #800020;">Ruby Deck</div>
+            <div class="subtitle">The official Anki deck for UWSMPH medical students.</div>
+        </div>
+    </div>
 </section>
-
 
 <section class="content">
 <!-- Markdown content will be loaded here -->
@@ -35,8 +41,6 @@
 </main>
 
 
-<footer>
-<p>&copy; 2025 AnkiSMPH. All rights reserved.</p>
-</footer>
+<div id="footer-component"></div>
 </body>
 </html>
