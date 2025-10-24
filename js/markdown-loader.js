@@ -7,7 +7,12 @@ async function loadMarkdownContent() {
     }
     
     // Get the current page name from the URL
-    const pageName = window.location.pathname.split('/').pop().replace('.html', '');
+    let pageName = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // If no page name (root URL), default to 'index'
+    if (!pageName || pageName === '') {
+        pageName = 'index';
+    }
     
     try {
         // Fetch the markdown content
