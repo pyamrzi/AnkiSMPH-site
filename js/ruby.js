@@ -1,17 +1,24 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-let camera, scene, renderer, controls, diamond;
+// Disable zoom interactions
+document.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+document.addEventListener('touchstart', (e) => e.touches.length > 1 && e.preventDefault());
+document.addEventListener('touchmove', (e) => e.touches.length > 1 && e.preventDefault());
+document.addEventListener('gesturestart', (e) => e.preventDefault());
+document.addEventListener('gesturechange', (e) => e.preventDefault());
+document.addEventListener('gestureend', (e) => e.preventDefault());
+
+let camera, scene, renderer, diamond;
 let mouseX = 0, mouseY = 0;
 let targetRotationX = 0, targetRotationY = 0;
 let baseRotation = 0;
 const rotationSensitivity = {
     x: 0.001,  // Adjust this value to change horizontal rotation sensitivity
     y: 0.001,  // Adjust this value to change vertical rotation sensitivity
-    base: 0.005 // Base rotation speed (independent of mouse movement)
+    base: 0.010 // Base rotation speed (independent of mouse movement)
 };
 
 function init() {
@@ -34,8 +41,8 @@ function init() {
     // Use a consistent vertical FOV
     const fov = 35;  // Narrower FOV for closer view
     camera = new THREE.PerspectiveCamera(fov, aspect, 0.1, 1000);
-    camera.position.set(0, 0, 8); // Ensure camera is centered and at proper distance
-    camera.lookAt(0, 0, 0); // Make sure camera is looking at center
+    camera.position.set(0, 2, 20);
+    camera.lookAt(0, 0, 0);
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ 
@@ -47,7 +54,7 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(fixedWidth, fixedHeight); // Fixed size
     renderer.useLegacyLights = false;
-    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+    renderer.outputColorSpace = 'srgb-linear';
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
     
@@ -82,12 +89,6 @@ function init() {
     directionalLight2.position.set(-5, -5, -5);
     scene.add(directionalLight2);
 
-    // Controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0;
-    controls.target.set(0, 0, 0); // Ensure camera is looking at center
-
     // Load model
     const gltfLoader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -99,6 +100,7 @@ function init() {
             diamond = gltf.scene;
             diamond.scale.set(1.5, 1.5, 1.5);  // Make the ruby larger
             diamond.position.set(0, -1.1, 0);  // Move down by 1 unit
+            diamond.rotation.set(-0.6, 0, 0); // Rotate forward to face camera more directly
             diamond.castShadow = true;
             diamond.receiveShadow = true;
 
@@ -154,10 +156,10 @@ function init() {
                     texture.mapping = THREE.EquirectangularReflectionMapping;
                     texture.format = THREE.RGBAFormat;
                     texture.type = THREE.HalfFloatType;
-                    texture.colorSpace = THREE.LinearSRGBColorSpace;
-                    texture.minFilter = THREE.LinearMipmapLinearFilter;
+                    texture.colorSpace = 'srgb-linear';
+                    texture.minFilter = THREE.LinearFilter;
                     texture.magFilter = THREE.LinearFilter;
-                    texture.generateMipmaps = true;
+                    texture.generateMipmaps = false;
                     texture.flipY = false;
                     texture.needsUpdate = true;
                     
@@ -235,10 +237,6 @@ function animate() {
         diamond.rotation.y += (finalRotationY - diamond.rotation.y) * 0.05;
     }
     
-    if (controls) {
-        controls.update();
-    }
-    
     if (renderer && scene && camera) {
         renderer.render(scene, camera);
     }
@@ -246,6 +244,3 @@ function animate() {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', init);
-
-
-

@@ -1,0 +1,151 @@
+/* Discord-like markdown styles (Light theme) */
+.content {
+    color: #2e3338;
+    line-height: 1.375rem;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.content code {
+    background: #f2f3f5;
+    border-radius: 3px;
+    padding: 0.2em 0.4em;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85em;
+    color: #2e3338;
+}
+
+.content pre {
+    background: #f2f3f5;
+    border-radius: 4px;
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow-x: auto;
+    border: 1px solid #e3e5e8;
+}
+
+.content pre code {
+    background: transparent;
+    padding: 0;
+    white-space: pre;
+    color: #2e3338;
+}
+
+.content blockquote {
+    border-left: 4px solid #b1b1b1;
+    margin: 0.5em 0;
+    padding: 0 0 0 1em;
+    color: #373737;
+    background: #ececec;
+    width: fit-content;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-style: italic;
+    border-radius: 3px;
+}
+
+.content h1, .content h2, .content h3,
+.content h4, .content h5, .content h6 {
+    color: #060607;
+    font-weight: 600;
+    margin: 1em 0 0.5em 0;
+}
+
+.content h1 {
+    font-size: 1.5em;
+}
+
+.content h2 {
+    font-size: 1.25em;
+}
+
+.content h3 {
+    font-size: 1.1em;
+}
+
+.content ul, .content ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+}
+
+.content li {
+    margin: 0.25em 0;
+}
+
+.content a {
+    color: #0068e0;
+    text-decoration: none;
+}
+
+.content a:hover {
+    text-decoration: underline;
+}
+
+.content hr {
+    border: none;
+    border-top: 1px solid #e3e5e8;
+    margin: 1em 0;
+}
+
+.content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+.content th, .content td {
+    border: 1px solid #e3e5e8;
+    padding: 0.5em;
+}
+
+.content th {
+    background: #f2f3f5;
+    color: #060607;
+    font-weight: 600;
+}
+
+.content img {
+    max-width: 100%;
+    border-radius: 4px;
+}
+
+.content p {
+    margin: 0.5em 0;
+}
+
+/* Discord spoiler style */
+.content .spoiler {
+    background-color: #e3e5e8;
+    padding: 0 2px;
+    border-radius: 3px;
+    color: transparent;
+    cursor: pointer;
+}
+
+.content .spoiler:hover {
+    color: #2e3338;
+}
+
+/* Discord mentions style */
+.content .mention {
+    color: #5865f2;
+    background: rgba(88,101,242,0.1);
+    padding: 0 2px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* Discord codeblock language tag */
+.content pre[class*="language-"]::before {
+    content: attr(class);
+    display: block;
+    background: #e3e5e8;
+    padding: 0.25em 0.5em;
+    border-radius: 4px 4px 0 0;
+    font-size: 0.85em;
+    color: #2e3338;
+    margin-bottom: 0.5em;
+    text-transform: lowercase;
+    border-bottom: 1px solid #e3e5e8;
+}
