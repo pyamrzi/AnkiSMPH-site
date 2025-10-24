@@ -13,7 +13,7 @@ let baseRotation = 0;
 const rotationSensitivity = {
     x: 0.001,  // Cursor position horizontal sensitivity
     y: 0.001,  // Cursor position vertical sensitivity
-    drag: 0.005,  // Sensitivity for drag rotation
+    drag: 0.01,  // Sensitivity for drag rotation (increased for better responsiveness)
     base: 0.010 // Base rotation speed (independent of mouse movement)
 };
 
@@ -237,9 +237,6 @@ function onMouseMove(event) {
         const deltaX = event.clientX - previousMouseX;
         currentRotationY += deltaX * rotationSensitivity.drag;
         previousMouseX = event.clientX;
-        
-        // Pause base rotation while dragging by storing current base rotation
-        baseRotation = diamond.rotation.y - targetRotationY - currentRotationY;
     }
 }
 
