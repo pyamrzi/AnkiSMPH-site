@@ -17,10 +17,10 @@
 6. Click on *AnkiCollab > Check for New Updates* to update the deck.
     -  Tip: You can toggle automatic updates in *AnkiCollab > Edit Subscriptions > Global Settings*
 7. If no cards are showing up then do the following 
-    7a. go to browse
-    7b. select the community deck on the left navigation panel
-    7c. select all the cards in the deck
-    7d. toggle suspend/unsuspend 
+   - 7a. go to browse
+   - 7b. select the community deck on the left navigation panel
+   - 7c. select all the cards in the deck
+   - 7d. toggle suspend/unsuspend 
 
 > Make sure to update once per week. The Anki Association will develop a regular schedule for Anki updates.
 
