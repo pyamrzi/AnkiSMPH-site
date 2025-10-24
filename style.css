@@ -1,4 +1,16 @@
 /* style.css */
+
+/* Prevent horizontal scrolling */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Universal box-sizing to prevent overflow */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .title {
     font-size: 2.5rem;
     text-align: center;
@@ -43,6 +55,9 @@ padding: 0;
 padding-top: 80px; /* Add space for fixed header */
 background-color: #ffffff;
 color: #222;
+overflow-x: hidden; /* Prevent horizontal scrolling */
+max-width: 100vw; /* Ensure body doesn't exceed viewport width */
+box-sizing: border-box; /* Include padding and border in element's total width */
 }
 
 /* Modern Header Styles */
