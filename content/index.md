@@ -1,4 +1,4 @@
-# How to install:
+# How to Install
 
 ## 1. Install AnkiCollab
 1. Go to *Tools > Addons > Get Addons *

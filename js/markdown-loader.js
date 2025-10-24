@@ -1,65 +1,63 @@
 async function loadMarkdownContent() {
+    // Wait for marked to be available
+    if (typeof marked === 'undefined') {
+        console.warn('marked library not yet loaded, retrying...');
+        setTimeout(loadMarkdownContent, 100);
+        return;
+    }
+    
     // Get the current page name from the URL
     const pageName = window.location.pathname.split('/').pop().replace('.html', '');
     
     try {
         // Fetch the markdown content
         const response = await fetch(`content/${pageName}.md`);
+        
+        // Check if the response is ok
+        if (!response.ok) {
+            throw new Error(`Failed to fetch markdown: ${response.status} ${response.statusText}`);
+        }
+        
         const markdownText = await response.text();
         
-        // Configure marked options for Discord-like rendering
-        marked.setOptions({
-            gfm: true,
-            breaks: true,
-            highlight: function(code, language) {
-                return `<div class="discord-codeblock ${language}">${code}</div>`;
-            }
-        });
-
-        // Custom renderer for Discord-like features
-        const renderer = new marked.Renderer();
+        // Ensure we have valid markdown text
+        if (typeof markdownText !== 'string') {
+            throw new Error('Invalid markdown content: not a string');
+        }
         
-        // Style code blocks with language
-        renderer.code = function(code, language) {
-            if (language) {
-                return `<pre class="language-${language}"><code>${code}</code></pre>`;
-            }
-            return `<pre><code>${code}</code></pre>`;
-        };
-
-        // Style blockquotes
-        renderer.blockquote = function(quote) {
-            return `<blockquote class="discord-quote">${quote}</blockquote>`;
-        };
-
-        // Style links
-        renderer.link = function(href, title, text) {
-            return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        };
-
-        // Process spoilers and mentions
-        renderer.text = function(text) {
-            return text
-                .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>')
-                .replace(/@(\w+)/g, '<span class="mention">@$1</span>');
-        };
-
-        marked.use({ renderer });
+        // Check if the markdown file is empty or doesn't exist
+        if (!markdownText.trim()) {
+            console.warn(`No content found in ${pageName}.md`);
+            document.querySelector('.content').innerHTML = '<p>No content available.</p>';
+            return;
+        }
         
-        // Convert markdown to HTML
-        const htmlContent = marked.parse(markdownText);
+        // Convert markdown to HTML - try different marked API approaches
+        let htmlContent;
+        try {
+            // Try the function approach first
+            if (typeof marked === 'function') {
+                htmlContent = marked(markdownText);
+            } else if (marked && typeof marked.parse === 'function') {
+                htmlContent = marked.parse(markdownText);
+            } else {
+                throw new Error('marked library API not recognized');
+            }
+        } catch (markdownError) {
+            console.error('Markdown parsing error:', markdownError);
+            throw new Error(`Markdown parsing failed: ${markdownError.message}`);
+        }
         
         // Insert the content into the main content section
         document.querySelector('.content').innerHTML = htmlContent;
-
-        // Add click handler for spoilers
-        document.querySelectorAll('.spoiler').forEach(spoiler => {
-            spoiler.addEventListener('click', function() {
-                this.style.color = '#dcddde';
-            });
-        });
     } catch (error) {
         console.error('Error loading markdown content:', error);
+        console.error('Error details:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+        });
+        document.querySelector('.content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
     }
 }
 

@@ -3,21 +3,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-// Disable zoom interactions
-document.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
-document.addEventListener('touchstart', (e) => e.touches.length > 1 && e.preventDefault());
-document.addEventListener('touchmove', (e) => e.touches.length > 1 && e.preventDefault());
-document.addEventListener('gesturestart', (e) => e.preventDefault());
-document.addEventListener('gesturechange', (e) => e.preventDefault());
-document.addEventListener('gestureend', (e) => e.preventDefault());
-
 let camera, scene, renderer, diamond;
+let isDragging = false;
+let previousMouseX = 0;
+let currentRotationY = 0;
 let mouseX = 0, mouseY = 0;
 let targetRotationX = 0, targetRotationY = 0;
 let baseRotation = 0;
 const rotationSensitivity = {
-    x: 0.001,  // Adjust this value to change horizontal rotation sensitivity
-    y: 0.001,  // Adjust this value to change vertical rotation sensitivity
+    x: 0.001,  // Cursor position horizontal sensitivity
+    y: 0.001,  // Cursor position vertical sensitivity
+    drag: 0.005,  // Sensitivity for drag rotation
     base: 0.010 // Base rotation speed (independent of mouse movement)
 };
 
@@ -67,9 +63,18 @@ function init() {
     container.style.display = 'flex';   // Use flexbox for centering
     container.style.justifyContent = 'center';  // Center horizontally within flex container
     container.style.alignItems = 'center';      // Center vertically within flex container
+    container.style.cursor = 'grab';  // Show grab cursor to indicate draggable
     
     // Add renderer to container
     container.appendChild(renderer.domElement);
+    
+    // Disable zoom interactions only for the ruby container
+    container.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+    container.addEventListener('touchstart', (e) => e.touches.length > 1 && e.preventDefault());
+    container.addEventListener('touchmove', (e) => e.touches.length > 1 && e.preventDefault());
+    container.addEventListener('gesturestart', (e) => e.preventDefault());
+    container.addEventListener('gesturechange', (e) => e.preventDefault());
+    container.addEventListener('gestureend', (e) => e.preventDefault());
     
     // Set renderer element style to be centered
     renderer.domElement.style.position = 'absolute';
@@ -98,9 +103,9 @@ function init() {
         "https://assets.codepen.io/439000/diamond2.glb",
         function (gltf) {
             diamond = gltf.scene;
-            diamond.scale.set(1.5, 1.5, 1.5);  // Make the ruby larger
-            diamond.position.set(0, -1.1, 0);  // Move down by 1 unit
-            diamond.rotation.set(-0.6, 0, 0); // Rotate forward to face camera more directly
+            diamond.scale.set(3, 3, 3);  // Make the ruby larger
+            diamond.position.set(0, -2, 0);  // Move down by 1 unit
+            diamond.rotation.set(0.1, 0, 0); // Rotate towards the camera with 0.3 tilt
             diamond.castShadow = true;
             diamond.receiveShadow = true;
 
@@ -203,18 +208,44 @@ function init() {
     // Window resize handler
     window.addEventListener('resize', onWindowResize);
     
-    // Mouse move handler
+    // Mouse interaction handlers for dragging
+    container.addEventListener('mousedown', onMouseDown);
     document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    
+    // Prevent context menu on right click
+    container.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function onMouseDown(event) {
+    isDragging = true;
+    previousMouseX = event.clientX;
+    container.style.cursor = 'grabbing';
 }
 
 function onMouseMove(event) {
-    // Calculate mouse position relative to the center of the window
+    // Always track cursor position for position-based rotation
     mouseX = (event.clientX - window.innerWidth / 2);
     mouseY = (event.clientY - window.innerHeight / 2);
     
     // Update target rotation based on mouse position and sensitivity
     targetRotationX = mouseY * rotationSensitivity.y;
     targetRotationY = mouseX * rotationSensitivity.x;
+    
+    // Handle dragging for manual rotation
+    if (isDragging) {
+        const deltaX = event.clientX - previousMouseX;
+        currentRotationY += deltaX * rotationSensitivity.drag;
+        previousMouseX = event.clientX;
+        
+        // Pause base rotation while dragging by storing current base rotation
+        baseRotation = diamond.rotation.y - targetRotationY - currentRotationY;
+    }
+}
+
+function onMouseUp(event) {
+    isDragging = false;
+    container.style.cursor = 'grab';
 }
 
 // Remove window resize handler since we're using fixed dimensions
@@ -229,12 +260,16 @@ function animate() {
         // Update base rotation
         baseRotation += rotationSensitivity.base;
         
-        // Combine base rotation with mouse-controlled rotation
-        const finalRotationY = baseRotation + targetRotationY;
-        
-        // Smoothly interpolate current rotation to combined target rotation
-        diamond.rotation.x += (targetRotationX - diamond.rotation.x) * 0.05;
-        diamond.rotation.y += (finalRotationY - diamond.rotation.y) * 0.05;
+        // Combine all rotation sources:
+        // 1. Base rotation (continuous)
+        // 2. Cursor position rotation (targetRotationY)
+        // 3. Drag rotation (currentRotationY)
+        const finalRotationY = baseRotation + targetRotationY + currentRotationY;
+
+        // Maintain the initial tilt and add cursor position influence
+        const baseTilt = 0.2; // Match the initial tilt
+        diamond.rotation.x = baseTilt + (targetRotationX * 0.3); // Add cursor influence to the base tilt
+        diamond.rotation.y += (finalRotationY - diamond.rotation.y) * 0.05; // Smooth rotation with easing
     }
     
     if (renderer && scene && camera) {

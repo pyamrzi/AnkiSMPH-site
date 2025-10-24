@@ -7,24 +7,6 @@ async function loadComponent(elementId, componentPath) {
             throw new Error(`Container element ${elementId} not found`);
         }
 
-        // Add fixed positioning to header and footer
-        if (elementId === 'header-component') {
-            container.style.position = 'fixed';
-            container.style.top = '0';
-            container.style.width = '100%';
-            container.style.zIndex = '1000';
-            // Add padding to body to prevent content from hiding behind header
-            document.body.style.paddingTop = '60px'; // Adjust value based on your header height
-        }
-        if (elementId === 'footer-component') {
-            container.style.position = 'fixed';
-            container.style.bottom = '0';
-            container.style.width = '100%';
-            container.style.zIndex = '1000';
-            // Add padding to body to prevent content from hiding behind footer
-            document.body.style.paddingBottom = '60px'; // Adjust value based on your footer height
-        }
-
         const response = await fetch(componentPath);
         if (!response.ok) {
             throw new Error(`Error loading component: ${response.status} - ${response.statusText}`);
@@ -50,3 +32,40 @@ async function loadComponent(elementId, componentPath) {
         }
     }
 }
+
+// Function to update active link in navigation
+function updateActiveLink() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const links = document.querySelectorAll('#header-component nav a');
+    
+    links.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Load components when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - Loading components...');
+    
+    // Check if containers exist
+    const headerContainer = document.getElementById('header-component');
+    const footerContainer = document.getElementById('footer-component');
+    
+    console.log('Header container found:', !!headerContainer);
+    console.log('Footer container found:', !!footerContainer);
+    
+    if (headerContainer) {
+        loadComponent('header-component', 'components/header.html');
+    } else {
+        console.error('Header container not found!');
+    }
+    
+    if (footerContainer) {
+        loadComponent('footer-component', 'components/footer.html');
+    } else {
+        console.error('Footer container not found!');
+    }
+});
