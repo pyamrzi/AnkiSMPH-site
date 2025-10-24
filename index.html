@@ -34,20 +34,24 @@
         </div>
     </div>
     <div>
-        <div class="invite-section">
-            <div class="invite-code-container">
-                <code id="invite-code">cold-social-harry-kentucky-kilo-magazine</code>
-                <button class="copy-btn" onclick="this.classList.add('clicked'); navigator.clipboard.writeText('cold-social-harry-kentucky-kilo-magazine'); setTimeout(() => this.classList.remove('clicked'), 100)">
+        <div class="invite-container">
+            <div class="invite-code-box">
+                <code id="invite-code" class="invite-code">cold-social-harry-kentucky-kilo-magazine</code>
+                <button onclick="this.style.background='#a4a4a4'; navigator.clipboard.writeText('cold-social-harry-kentucky-kilo-magazine'); setTimeout(() => this.style.background='#c4c4c4', 100)" 
+                    class="copy-button">
                     Copy
                 </button>
             </div>
-            <div class="spacer"></div>
+        </div>
+        <div class="discord-container">
             <a href="https://discord.gg/7SBWp4UqNT" target="_blank">
-                <button class="discord-btn" onclick="this.classList.add('clicked'); setTimeout(() => this.classList.remove('clicked'), 100)">
+                <button onclick="this.style.background='#4752C4'; setTimeout(() => this.style.background='#5865F2', 100)"
+                    class="discord-button">
                     Get Updates via Discord
                 </button>
             </a>
         </div>
+    </div>
     </div>
 </section>
 
