@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-let camera, scene, renderer, diamond;
+let camera, scene, renderer, diamond, container;
 let isDragging = false;
 let previousMouseX = 0;
 let currentRotationY = 0;
@@ -20,7 +20,7 @@ const rotationSensitivity = {
 function init() {
     console.log('Initializing Ruby visualization...');
     
-    const container = document.getElementById('ruby-container');
+    container = document.getElementById('ruby-container');
     if (!container) {
         console.error('Ruby container not found!');
         return;
